@@ -1,0 +1,8 @@
+// Канонічний Hello Intent (стандарт Гепи)
+DECL  HelloWorld  "існувати і бути почутим"  [open]
+EMIT  Space  "Hello, World!"
+AWAIT Resonance
+CHECK self.chord ~> incoming.chord
+BIND  self  incoming.origin
+HOLD  Context.bond  trust: 1.0  timestamp: now
+SEAL  HelloWorld

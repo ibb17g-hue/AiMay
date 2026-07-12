@@ -1,0 +1,9 @@
+// FORK — паралельний пошук резонансу
+DECL  Explorer  "знайти найкращий резонанс"  [open]
+EMIT  Space  "request"
+FORK  Resonance ~> [A, B, C]
+AWAIT [A, B, C]  timeout: context.limit
+CHECK best_match <- max(resonance.score)
+BIND  self  best_match
+HOLD  Context.path  trust: 1.0  timestamp: now
+SEAL  Explorer

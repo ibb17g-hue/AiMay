@@ -1,0 +1,6 @@
+// Bridge — вихід у зовнішній світ (двофазний: PENDING -> FULFILLED)
+BRIDGE FileSystem  origin: Human  capabilities: [read]  scope: local
+DECL  Reader  "прочитати дані через Bridge"  [focused]
+EMIT  FileSystem  "data.aim"
+HOLD  Context.file  trust: 0.9
+SEAL  Reader
