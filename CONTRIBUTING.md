@@ -14,6 +14,12 @@ that meaning — if code and semantics disagree, the code is wrong,
 unless you're proposing to amend the semantics document itself (see
 below).
 
+If your contribution makes the language more expressive at the cost
+of making its semantics less precise, it is almost certainly the
+wrong trade-off. This project has, so far, consistently chosen
+semantic rigor over new capability — that's not caution, it's the
+design principle.
+
 ## Adding a new command
 
 Commands are plugins, not hardcoded dispatcher methods. To add one:
@@ -67,11 +73,13 @@ under a different name, it's not a new command — it's a rename.
 
 ## Working with ContextGraph
 
-Don't add a second graph structure. Per `FORMAL_SEMANTICS.md` §3,
-there is one `ContextGraph` per Intent, read two ways (Context vs
-Memory). If your feature seems to need a separate structure, that's
-worth raising as a discussion before implementing it — it's exactly
-the kind of thing that should go through review, not a solo PR.
+Don't introduce a second graph structure without first proving the
+existing model insufficient. Per `FORMAL_SEMANTICS.md` §3, every
+Intent operates through exactly one `ContextGraph` at a time, read two
+ways (Context vs Memory). If your feature seems to need a separate
+structure, that's worth raising as a discussion before implementing
+it — it's exactly the kind of thing that should go through review,
+not a solo PR.
 
 ## Proposing a change to the semantics itself
 
