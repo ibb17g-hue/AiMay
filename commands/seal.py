@@ -9,6 +9,14 @@ def cmd_seal(engine, args: list):
 
     intent = engine.intents.get(name) or engine.current
     if intent:
+        unresolved = intent.has_unresolved_children(engine.intents)
+        if unresolved:
+            engine._log("SEAL", (
+                f"{C.RED}✗{C.RESET} {C.CYAN}{name}{C.RESET} → "
+                f"НЕ fulfilled — очікує TASK: {C.YELLOW}{unresolved}{C.RESET}"
+            ), C.RED)
+            return
+
         intent.seal()
         bonds_info = (f"  bonds:{C.GREEN}{[f'{a}↔{b}' for a, b, _ in intent.bonds]}{C.RESET}"
                       if intent.bonds else "")
