@@ -44,6 +44,27 @@ Before proposing a new command, check `docs/FORMAL_SEMANTICS.md` §5
 — for example, a command that lets `HOLD` alter `Purpose` — is not a
 bug to fix later. It's a sign the command shouldn't exist as proposed.
 
+Before that, ask a simpler question first: **does this express a new
+semantic action that principled composition of existing commands and
+their attributes genuinely cannot describe correctly?** If existing
+commands can express it — even awkwardly — extend their syntax (an
+attribute on `DECL`, an argument on `SEAL`) rather than adding a new
+keyword. AiMay's core is small on purpose; keeping it small is a
+design goal, not an oversight.
+
+One more filter, learned from a real disagreement during v0.3: a
+command is not added because the team can imagine it being useful.
+A real scenario has to exist first — one the language genuinely
+cannot describe as it stands. The scenario gives birth to the
+command, not the other way around.
+
+A useful check on top of both filters: does the command express a
+**semantic relation** distinct from every relation the language
+already has? `BIND` is the relation of connection. `BREAK` is the
+relation of severance. `ADOPT` is the relation of stewardship. If a
+proposed command would describe the same relation as an existing one,
+under a different name, it's not a new command — it's a rename.
+
 ## Working with ContextGraph
 
 Don't add a second graph structure. Per `FORMAL_SEMANTICS.md` §3,
