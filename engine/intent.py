@@ -22,6 +22,16 @@ class Intent:
         self.bonds: list[tuple[str, str, bool]] = []   # (a, b, locked)
         self._locked_nodes: set[str] = set()
         self.created_at  = datetime.now()
+        self.children: list[str] = []   # імена Intent, породжених через TASK
+
+    def has_unresolved_children(self, registry: dict) -> list:
+        """Повертає імена дітей, чий статус ще не fulfilled/suspended."""
+        unresolved = []
+        for name in self.children:
+            child = registry.get(name)
+            if child and child.status not in (Intent.FULFILLED, Intent.SUSPENDED):
+                unresolved.append(name)
+        return unresolved
 
     # ── Пам'ять ──────────────────────────────────────────────────────────
 
