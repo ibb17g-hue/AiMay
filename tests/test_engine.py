@@ -204,6 +204,57 @@ QUERY NoSuchIntent memory
     assert before == after, "QUERY змінив стан рушія — не має бути жодних побічних ефектів"
 
 
+def test_invariant_fork_does_not_copy_intent():
+    """
+    FORMAL_SEMANTICS §5.2: FORK не копіює Intent. Перевіряємо не лише
+    незмінність id() об'єкта, а те, що після FORK існує рівно один
+    власник Purpose/Origin — гілки FORK не стають окремими Intent.
+    """
+    engine = AiMayEngine(seed=1)
+    engine.run_source('DECL Explorer "test" [open]')
+
+    explorer = engine.intents["Explorer"]
+    intents_before = set(engine.intents.keys())
+    id_before, origin_before, purpose_before = (
+        id(explorer), explorer.origin, explorer.purpose,
+    )
+
+    engine.run_source("FORK Resonance ~> [A, B, C]")
+
+    assert set(engine.intents.keys()) == intents_before, \
+        "FORK не повинен створювати нові Intent-об'єкти в реєстрі"
+    assert engine.intents["Explorer"] is explorer, \
+        "FORK не повинен підміняти сам Intent-об'єкт"
+    assert id(engine.intents["Explorer"]) == id_before
+    assert explorer.origin == origin_before and explorer.purpose == purpose_before, \
+        "FORK не повинен чіпати Origin/Purpose єдиного Intent"
+
+    for candidate in ("Explorer.A", "Explorer.B", "Explorer.C"):
+        assert candidate not in engine.intents, \
+            f"{candidate} — кандидат шляху, а не окремий Intent"
+        assert candidate in engine.space.graph.nodes, \
+            f"{candidate} має існувати лише як вузол графа простору"
+
+
+def test_invariant_dissonance_is_always_a_relation():
+    """
+    FORMAL_SEMANTICS §4/§5.3: Dissonance завжди виникає між сутностями,
+    ніколи з порожньою чи відсутньою стороною.
+    """
+    engine = AiMayEngine(seed=1)
+    engine.run_source('DECL Strict "test" [locked]')
+    engine.space.graph.nodes["incoming.Strict"].data = {"chord": ["different"]}
+    engine.run_source("""
+CHECK self.chord ~> incoming.chord
+BREAK self other
+UNKNOWNCMD x y
+""")
+    assert len(engine.dissonances) >= 3, "мали згенеруватись dissonances з трьох різних джерел"
+    for ds in engine.dissonances:
+        assert ds.source, f"{ds} має мати непорожній source (не самотнє повідомлення про помилку)"
+        assert ds.target, f"{ds} має мати непорожній target"
+
+
 if __name__ == "__main__":
     tests = [v for k, v in list(globals().items()) if k.startswith("test_")]
     passed, failed = 0, 0
