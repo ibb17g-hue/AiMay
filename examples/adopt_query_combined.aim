@@ -1,0 +1,20 @@
+// ADOPT + QUERY разом — куратор перевіряє стан перед і після stewardship
+DECL  A        "root: assign initial scouting"  [open]
+TASK  Scout    "map the eastern route"  [focused]
+
+// A перевіряє стан Scout, поки той ще під її кураторством
+QUERY Scout    bonds
+QUERY Scout    memory
+
+DECL  B        "secondary coordinator, better positioned to curate Scout"  [open]
+ADOPT Scout
+// spawned_by(Scout) тепер B; origin/purpose/context — незмінні
+
+// B перевіряє те саме — має побачити ідентичний стан, лише іншого куратора
+QUERY Scout    bonds
+QUERY Scout    memory
+
+HOLD  Context.checkpoint  trust: 1.0
+SEAL  Scout
+SEAL  A
+SEAL  B

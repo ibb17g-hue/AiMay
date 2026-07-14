@@ -1,0 +1,11 @@
+// TASK — дочірній Intent, батько не fulfilled поки діти не resolved
+DECL  Explorer  "координувати підзадачі"  [open]
+TASK  Scout    "розвідати шлях A"  [focused]
+TASK  Mapper   "розвідати шлях B"  [focused]
+SEAL  Explorer
+// ^ це має провалитись — Scout і Mapper ще Active
+
+SEAL  Scout
+SEAL  Mapper
+SEAL  Explorer
+// ^ а це має пройти — обидва TASK вже fulfilled

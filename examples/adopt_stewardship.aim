@@ -1,0 +1,9 @@
+// ADOPT — stewardship, не ownership. Origin ніколи не переписується.
+DECL  A  "root intent"  [open]
+TASK  X  "child of A"  [open]
+DECL  B  "unrelated explorer"  [open]
+ADOPT X
+// spawned_by(X) тепер B, origin(X) лишається таким, як був у A
+SEAL  X
+SEAL  A
+SEAL  B

@@ -1,0 +1,7 @@
+// QUERY — read-only інтроспекція, ніяких побічних ефектів
+DECL  Explorer  "test resonance"  [open]
+FORK  Resonance ~> [A, B, C]
+QUERY Explorer memory
+QUERY Explorer bonds
+QUERY Explorer resonance
+SEAL  Explorer
