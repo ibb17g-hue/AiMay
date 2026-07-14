@@ -66,7 +66,17 @@ class AiMayEngine:
         if handler:
             handler(self, args)
         else:
-            self._log("WARN", f"{C.YELLOW}невідома команда: {cmd}{C.RESET}", C.YELLOW)
+            ds = Dissonance(
+                source=self.current.name if self.current else "parser",
+                target=cmd,
+                reason="unknown command: not in @command registry — "
+                       "semantic contract violated between authors",
+                pattern=Dissonance.DECLARED,
+            )
+            self.dissonances.append(ds)
+            self._log("PARSE", (
+                f"{C.RED}✗ невідома команда: {cmd}{C.RESET} → {ds}"
+            ), C.RED)
 
     # ── Запуск ───────────────────────────────────────────────────────────
 
